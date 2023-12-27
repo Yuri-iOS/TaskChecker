@@ -22,6 +22,10 @@ struct ScreenStack<T: ScreenDelegate> {
         self.routes.removeAll()
     }
     
+    mutating func reset(_ s: T) {
+        self.routes = [s]
+    }
+    
     func top() -> T? {
         return self.routes.last
     }

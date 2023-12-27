@@ -10,4 +10,7 @@ import Foundation
 struct SMKeys {
     static let AUTHORIZED = "authorized"
     static let ONBOARDING_PRESENTED = "onboardingPresented"
+    static let FIRST_LAUNCH_HANDLER = "firstLaunchHandler"
+    
+    
 }

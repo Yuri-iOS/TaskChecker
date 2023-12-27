@@ -6,23 +6,108 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 struct BaseEventsView: View {
+    @EnvironmentObject var eventsModel: BaseEventsModel
+    @EnvironmentObject var authRepository: AuthRepositoryImpl
+    @EnvironmentObject var taskRepository: TaskRepositoryImpl
+    @StateObject var eventsSettingsModel = BaseEventsSettingsModel()
+    @State private var firstAppear = false
+    
     var body: some View {
         ZStack {
-            Color.red.ignoresSafeArea(.all)
-            VStack {
-                ScrollView {
-                    ForEach(0..<45) { i in
-                        Text("\(i)")
+            Color.blueMain.ignoresSafeArea(.all)
+            VStack(spacing: 0) {
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        eventsModel.settingsPresented.toggle()
+                    }, label: {
+                        Image(systemName: "gearshape.fill")
+                    })
+                    .buttonStyle(.plain)
+                    .padding(.horizontal)
+                    .padding(.bottom, 8)
+                }
+                Picker("", selection: $eventsModel.pickerState) {
+                    ForEach(PickerDestination.allCases, id: \.self) { part in
+                        pickerPart(by: part)
                     }
                 }
+                .pickerStyle(SegmentedPickerStyle())
+                TabView(selection: $eventsModel.pickerState) {
+                    Group {
+                        if eventsModel.dayPartData.morning {
+                            BaseMorningEventsView().tag(PickerDestination.morning)
+                        }
+                        if eventsModel.dayPartData.day {
+                            BaseDayEventsView().tag(PickerDestination.day)
+                        }
+                        if eventsModel.dayPartData.evening {
+                            BaseEveningEventsView().tag(PickerDestination.evening)
+                        }
+                        if eventsModel.dayPartData.night {
+                            BaseNightEventsView().tag(PickerDestination.night)
+                        }
+                        
+                    }.environmentObject(eventsModel)
+                }
+                .tabViewStyle(.page(indexDisplayMode: .never))
             }
         }
+        .sheet(isPresented: $eventsModel.settingsPresented, content: {
+            BaseEventsSettingsView()
+                .environmentObject(eventsSettingsModel)
+        })
+        .sheet(isPresented: $eventsModel.newEventPresented, content: {
+            BaseEventsNewEventView()
+        })
         .onAppear {
-            print("BaseEventsView")
-        }
+            if !firstAppear {
+                eventsModel.setLoadingState()
+                Task {
+                    await taskRepository.readAllTasks(userId: authRepository.user?.uid ?? "") { error in
+                        if error == nil {
+                            DispatchQueue.main.async {
+                                self.eventsModel.setSuccessState()
+                            }
+                        } else {
+                            DispatchQueue.main.async {
+                                self.eventsModel.setErrorState(error)
+                            }
+                        }
+                    }
+                }
+                firstAppear = true
+            }
 
+        }
+    }
+    
+    @ViewBuilder private func pickerPart(by part: PickerDestination) -> some View {
+        switch part {
+        case .morning:
+            if eventsModel.dayPartData.morning {
+                Text(String(localized: part.nameOfPart))
+                    .tag(part)
+            }
+        case .day:
+            if eventsModel.dayPartData.day {
+                Text(String(localized: part.nameOfPart))
+                    .tag(part)
+            }
+        case .evening:
+            if eventsModel.dayPartData.evening {
+                Text(String(localized: part.nameOfPart))
+                    .tag(part)
+            }
+        case .night:
+            if eventsModel.dayPartData.night {
+                Text(String(localized: part.nameOfPart))
+                    .tag(part)
+            }
+        }
     }
 }
 

@@ -7,12 +7,12 @@
 
 import Foundation
 
-enum BaseStateDestination: ScreenDelegate {
+enum InitializeRouteDestination: ScreenDelegate {
     case auth
     case onboarding
     case base
     
-    static func checkInitalize() -> BaseStateDestination {
+    static func checkInitalize() -> InitializeRouteDestination {
         if StorageManager.shared.authorized && StorageManager.shared.onboardingPresented {
             return .base
         }

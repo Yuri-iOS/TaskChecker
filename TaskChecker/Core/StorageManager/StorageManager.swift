@@ -13,6 +13,8 @@ final class StorageManager {
     
     @AppStorage(SMKeys.AUTHORIZED) private(set) var authorized = false
     @AppStorage(SMKeys.ONBOARDING_PRESENTED) private(set) var onboardingPresented = false
+    @AppStorage(SMKeys.FIRST_LAUNCH_HANDLER) private(set) var firstLaunchHandler = false
+    
     
     func setAuthorized(_ b: Bool) {
         authorized = b
@@ -21,5 +23,4 @@ final class StorageManager {
     func setOnboardingPresented(_ b: Bool) {
         onboardingPresented = b
     }
-    
 }

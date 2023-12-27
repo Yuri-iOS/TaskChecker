@@ -30,7 +30,7 @@ struct TabBarButton: View {
                     .frame(width: 20, height: 20)
                     .padding(.top, 12)
                 
-                    Text(text)
+                Text(text)
                     .font(.footnote)
                     
             }.foregroundColor(.white)
@@ -39,7 +39,6 @@ struct TabBarButton: View {
         })
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(isSelected ? Color.blue : Color.gray)
-//        .padding(.bottom, 24)
         
     }
 }

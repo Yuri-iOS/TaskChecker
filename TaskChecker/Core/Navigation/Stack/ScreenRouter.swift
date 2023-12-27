@@ -38,7 +38,6 @@ final class ScreenRouter<V: ScreenDelegate>: ObservableObject {
             direction = .forward
             screenStack.push(route)
         }
-        
     }
     
     func pop() {
@@ -52,6 +51,13 @@ final class ScreenRouter<V: ScreenDelegate>: ObservableObject {
         withAnimation(popToRootAnimation) {
             direction = .backward
             screenStack.popToRoot()
+        }
+    }
+    
+    func resetStack(route: V) {
+        withAnimation(pushAnimation) {
+            direction = .backward
+            screenStack.reset(route)
         }
     }
 

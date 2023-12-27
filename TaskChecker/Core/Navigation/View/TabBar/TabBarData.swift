@@ -8,7 +8,7 @@
 import Foundation
 
 struct TabBarData<V: ScreenDelegate> {
-    let title: String
+    let title: String.LocalizationValue
     let icon: String
     let destination: V
 }

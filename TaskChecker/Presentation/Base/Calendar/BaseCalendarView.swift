@@ -19,12 +19,9 @@ struct BaseCalendarView: View {
                 }
             }
         }
-        .onAppear {
-            print("BaseCalendarView")
-        }
     }
 }
 
-#Preview {
-    BaseCalendarView()
-}
+//#Preview {
+//    BaseCalendarView()
+//}

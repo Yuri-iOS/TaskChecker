@@ -1,7 +1,22 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
+    "-" : {
+
+    },
+    "%@" : {
+
+    },
     "%lld" : {
+
+    },
+    "+" : {
+
+    },
+    "add" : {
 
     },
     "allEvents" : {
@@ -21,7 +36,7 @@
         }
       }
     },
-    "auth" : {
+    "back" : {
 
     },
     "calendar" : {
@@ -37,6 +52,44 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Календарь"
+          }
+        }
+      }
+    },
+    "day" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Day"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "День"
+          }
+        }
+      }
+    },
+    "email" : {
+
+    },
+    "End" : {
+
+    },
+    "evening" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Evening"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вечер"
           }
         }
       }
@@ -58,7 +111,45 @@
         }
       }
     },
+    "morning" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Morning"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Утро"
+          }
+        }
+      }
+    },
+    "night" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Night"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ночь"
+          }
+        }
+      }
+    },
     "onb" : {
+
+    },
+    "Part of the day settings" : {
+
+    },
+    "print id" : {
 
     },
     "profile" : {
@@ -78,10 +169,25 @@
         }
       }
     },
-    "to base" : {
+    "sign in" : {
 
     },
-    "to onb" : {
+    "sign out hole stack" : {
+
+    },
+    "sign up" : {
+
+    },
+    "Start" : {
+
+    },
+    "t i" : {
+
+    },
+    "title" : {
+
+    },
+    "to base" : {
 
     }
   },

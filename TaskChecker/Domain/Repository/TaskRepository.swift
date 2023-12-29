@@ -12,5 +12,7 @@ protocol TaskRepository {
     
     func readTask(documentId: String) async
     
+    func readAllTasksByDate(userId: String, date: String, completion: @escaping (Error?) -> Void) async
+    
     func readAllTasks(userId: String, completion: @escaping (Error?) -> Void) async
 }

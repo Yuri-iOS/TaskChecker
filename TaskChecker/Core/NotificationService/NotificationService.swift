@@ -15,7 +15,8 @@ class NotificationService {
     static func permission() {
         let center = UNUserNotificationCenter.current()
 
-        center.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in }
+        center.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
+        }
     }
     
     func setReminder(_ date: Date, subtitle: String, isRepeat: Bool, identifier: String) {
@@ -40,7 +41,7 @@ class NotificationService {
         UNUserNotificationCenter.current().add(request)
     }
     
-    static func removeNotification(identifier: String) {
+    func removeNotification(identifier: String) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
     }
 //    static func requestReviewManually() {

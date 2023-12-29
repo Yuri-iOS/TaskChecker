@@ -15,11 +15,9 @@ struct BaseEveningEventsView: View {
     var body: some View {
         ZStack {
             Color.red.ignoresSafeArea(.all)
-            VStack {
+            ScrollView {
                 ForEach(taskRepository.array.filter({ $0.dayPart == PickerDestination.evening.value}), id: \.id) { task in
-                    Text(task.dayPart)
-                    Text(task.title)
-                    Text(task.timeInterval)
+                    TaskCardView(data: task)
                 }
             }
         }

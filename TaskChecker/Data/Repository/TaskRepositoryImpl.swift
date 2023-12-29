@@ -14,25 +14,18 @@ final class TaskRepositoryImpl: ObservableObject, TaskRepository {
     let taskMapper = TaskMapper.shared
     
     @Published var array: [TaskEntityModel] = []
-    
-//    func addTask(from data: TaskEntityModel) async {
-//        do {
-//            let collection = db.collection("task")
-//            let document = collection.document(data.id)
-//            try document.setData(from: taskMapper.mapToV(data))
-//        } catch {
-//            print(error)
-//        }
-//    }
+    @Published var historyArray: [TaskEntityModel] = []
     
     func addTask(userId: String, from data: TaskEntityModel, completion: @escaping (Error?) -> Void) async {
         do {
-            print(userId)
-            let mainCollection = db.collection("user")
-            let mainDocument = mainCollection.document(userId)
-            let collection = mainDocument.collection("task")
-            let document = collection.document(data.id)
-            try document.setData(from: taskMapper.mapToV(data))
+            try db
+                .collection("user")
+                .document(userId)
+                .collection("date_task")
+                .document(data.initialDate ?? "")
+                .collection("all_tasks")
+                .document(data.id ?? "")
+                .setData(from: taskMapper.mapToV(data))
             completion(nil)
         } catch {
             completion(error)
@@ -57,7 +50,34 @@ final class TaskRepositoryImpl: ObservableObject, TaskRepository {
             }
             
         } catch {
+            print(" JOPPPAAAA", error)
+        }
+    }
+    
+    func readAllTasksByDate(userId: String, date: String, completion: @escaping (Error?) -> Void) async {
+        DispatchQueue.main.sync {
+            self.array = []
+        }
+        do {
+            let snapshot = try await db
+                .collection("user")
+                .document(userId)
+                .collection("date_task")
+                .document(date)
+                .collection("all_tasks")
+                .getDocuments()
+            
+            for document in snapshot.documents {
+                let jsonData = try JSONSerialization.data(withJSONObject: document.data())
+                let result = try JSONDecoder().decode(FBFSTaskModel.self, from: jsonData)
+                DispatchQueue.main.async {
+                    self.array.append(self.taskMapper.mapToDomainModel(result))
+                }
+            }
+            completion(nil)
+        } catch {
             print(error)
+            completion(error)
         }
     }
     
@@ -66,16 +86,25 @@ final class TaskRepositoryImpl: ObservableObject, TaskRepository {
             self.array = []
         }
         do {
-            let mainCollection = db.collection("user")
-            let mainDocument = mainCollection.document(userId)
-            let snapshot = try await mainDocument.collection("task").getDocuments()
-            for document in snapshot.documents {
-                let jsonData = try JSONSerialization.data(withJSONObject: document.data())
-                let result = try JSONDecoder().decode(FBFSTaskModel.self, from: jsonData)
-                DispatchQueue.main.async {
-                    self.array.append(self.taskMapper.mapToDomainModel(result))
-                }
+            let datesSnapshot = try await db
+                .collection("user")
+                .document(userId)
+                .collection("date_task")
+                .getDocuments()
+            for task in datesSnapshot.documents {
+                
             }
+//            let allTasksSnapshot =
+//            let mainCollection = db.collection("user")
+//            let mainDocument = mainCollection.document(userId)
+//            let snapshot = try await mainDocument.collection("task").getDocuments()
+//            for document in snapshot.documents {
+//                let jsonData = try JSONSerialization.data(withJSONObject: document.data())
+//                let result = try JSONDecoder().decode(FBFSTaskModel.self, from: jsonData)
+//                DispatchQueue.main.async {
+//                    self.array.append(self.taskMapper.mapToDomainModel(result))
+//                }
+//            }
             completion(nil)
         } catch {
             completion(error)

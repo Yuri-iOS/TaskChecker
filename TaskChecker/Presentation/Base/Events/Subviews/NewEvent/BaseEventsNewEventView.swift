@@ -19,14 +19,14 @@ struct BaseEventsNewEventView: View {
         ZStack {
             Color.teal.ignoresSafeArea(.all)
             ScrollView {
-    
-//                HStack {
-                    DatePicker("", selection: $date)
-                        .datePickerStyle(WheelDatePickerStyle())
-                        .labelsHidden()
-                        .padding(.horizontal)
-//                    Spacer()
-//                }
+                
+                //                HStack {
+                DatePicker("", selection: $date)
+                    .datePickerStyle(WheelDatePickerStyle())
+                    .labelsHidden()
+                    .padding(.horizontal)
+                //                    Spacer()
+                //                }
                 VStack {
                     HStack {
                         Text("Day part")
@@ -37,9 +37,9 @@ struct BaseEventsNewEventView: View {
                             }
                         }
                     }
-
+                    
                     TextField("title", text: $newEventModel.title)
-                    TextField("t i", text: $newEventModel.timeInterval)
+                    TextField("note", text: $newEventModel.note)
                     Button(action: {
                         Task {
                             await createTask()
@@ -48,7 +48,7 @@ struct BaseEventsNewEventView: View {
                         Text("add")
                     })
                 }.padding(.horizontal, 32)
-
+                
             }
         }
     }
@@ -79,37 +79,42 @@ struct BaseEventsNewEventView: View {
     }
     
     private func createTask() async {
+        eventsModel.createIdentifier()
+        //        let id = String(Date().millisecondsSince1970)
         await taskRepository.addTask(
             userId: authRepository.user?.uid ?? "",
             from: TaskEntityModel(
-                id: String(Date().millisecondsSince1970),
+                id: eventsModel.identifier,
+                notificationId: eventsModel.identifier,
+                groupId: "",
                 title: newEventModel.title,
-                timeInterval: newEventModel.timeInterval,
+                note: newEventModel.note,
                 dayPart: eventsModel.pickerState.value,
-                note: "",
-                initialDate: "",
+                initialDate: Date().currentDateFormatted,
                 priority: "",
                 color: "",
-                notificationId: "",
-                groupId: "",
-                status: ""
+                status: "",
+                notificationTime: date.selectedTimeFormatted
             ),
             completion: { error in
                 if error == nil {
                     eventsModel.setLoadingState()
-                    DispatchQueue.main.async {
-                        Task {
-                            await taskRepository.readAllTasks(userId: authRepository.user?.uid ?? "") { error in
-                                if error == nil {
-                                    eventsModel.setSuccessState()
-                                } else {
-                                    eventsModel.setErrorState(error)
+                    Task {
+                        await taskRepository.readAllTasksByDate(userId: authRepository.user?.uid ?? "", date: Date().currentDateFormatted) { error in
+                            if error == nil {
+                                eventsModel.setSuccessState()
+                                NotificationService.shared.setReminder(date, subtitle: newEventModel.title, isRepeat: false, identifier: eventsModel.identifier)
+                                DispatchQueue.main.async {
+                                    dismiss()
                                 }
+                                
+                            } else {
+                                eventsModel.setErrorState(error)
                             }
                         }
-                        NotificationService.shared.setReminder(date, subtitle: "jojoj", isRepeat: false, identifier: UUID().uuidString)
-                        dismiss()
                     }
+                    
+                    
                 } else {
                     newEventModel.setError(error?.localizedDescription ?? "unknown error")
                 }
@@ -129,9 +134,9 @@ struct BaseEventsNewEventFieldView: View {
     }
 }
 
-#Preview {
-    BaseEventsNewEventView()
-        .environmentObject(TaskRepositoryImpl())
-        .environmentObject(AuthRepositoryImpl())
-        .environmentObject(BaseEventsModel())
-}
+//#Preview {
+//    BaseEventsNewEventView()
+//        .environmentObject(TaskRepositoryImpl())
+//        .environmentObject(AuthRepositoryImpl())
+//        .environmentObject(BaseEventsModel())
+//}

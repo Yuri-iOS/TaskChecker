@@ -13,6 +13,7 @@ final class BaseEventsModel: ObservableObject {
     @Published var settingsPresented = false
     @Published var newEventPresented = false
     @Published private(set) var tasksState: TasksInitState = .loading
+    @Published var identifier = String(Date().millisecondsSince1970)
 //    @Published var
     
     func refreshDayPartData() {
@@ -42,7 +43,9 @@ final class BaseEventsModel: ObservableObject {
         case failure(error: Error?)
     }
     
-    
+    func createIdentifier() {
+        identifier = String(Date().millisecondsSince1970)
+    }
 }
 
 enum PickerDestination: String, CaseIterable {

@@ -10,7 +10,7 @@ import SwiftUI
 extension BaseEventsNewEventView {
     final class BaseEventsNewEventModel: ObservableObject {
         @Published var title = ""
-        @Published var timeInterval = ""
+        @Published var note = ""
         @Published private(set) var errorMessage = ""
         @Published private(set) var errorAppear = false
         

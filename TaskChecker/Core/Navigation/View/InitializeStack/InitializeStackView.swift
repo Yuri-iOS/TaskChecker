@@ -34,12 +34,18 @@ struct InitializeStackView: View {
                             authRepository.signInWithEmail(email: email, password: password, completion: { user, error in
                                 if error == nil {
                                     authComplete()
+                                } else {
+                                    let e = error
+                                    let r = e.map({ $0.localizedDescription})
+                                    print(error?.localizedDescription)
                                 }
                             })
                     }, signUpCompletion: { email, password in
                         authRepository.signUpWithEmail(email: email, password: password, completion: { user, error in
                             if error == nil {
                                 authComplete()
+                            } else {
+                                print(error)
                             }
                         })
                     })

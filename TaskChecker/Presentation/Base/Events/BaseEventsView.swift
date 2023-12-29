@@ -20,6 +20,11 @@ struct BaseEventsView: View {
             Color.blueMain.ignoresSafeArea(.all)
             VStack(spacing: 0) {
                 HStack {
+                    Button(action: {
+                        NotificationService.shared.removeNotification(identifier: eventsModel.identifier)
+                    }, label: {
+                        Text("remove \(eventsModel.identifier)")
+                    })
                     Spacer()
                     Button(action: {
                         eventsModel.settingsPresented.toggle()
@@ -67,15 +72,11 @@ struct BaseEventsView: View {
             if !firstAppear {
                 eventsModel.setLoadingState()
                 Task {
-                    await taskRepository.readAllTasks(userId: authRepository.user?.uid ?? "") { error in
+                    await taskRepository.readAllTasksByDate(userId: authRepository.user?.uid ?? "", date: Date().currentDateFormatted) { error in
                         if error == nil {
-                            DispatchQueue.main.async {
-                                self.eventsModel.setSuccessState()
-                            }
+                            self.eventsModel.setSuccessState()
                         } else {
-                            DispatchQueue.main.async {
-                                self.eventsModel.setErrorState(error)
-                            }
+                            self.eventsModel.setErrorState(error)
                         }
                     }
                 }
